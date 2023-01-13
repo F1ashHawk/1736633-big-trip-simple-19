@@ -42,6 +42,29 @@ export default class DatesView extends View {
     `;
   }
 
+  /**
+   * @param {CalendarConfig} config
+   */
+  setConfig(config) {
+    const defaultConfig = {
+      allowInput: true,
+      enableTime: true,
+      monthSelectorType: 'static'
+    };
+
+    // @ts-ignore
+    this.#startDateConfig = {
+      onChange: ([value]) => this.#endDateCalendar.set('minDate', value),
+      ...defaultConfig,
+      ...config
+    };
+
+    // @ts-ignore
+    this.#endDateConfig = {
+      ...defaultConfig,
+      ...config
+    };
+  }
 
   createCalendars() {
     const [startDateView, endDateView] = this.querySelectorAll('input');
@@ -53,6 +76,23 @@ export default class DatesView extends View {
   destroyCalendars() {
     this.#startDateCalendar?.destroy();
     this.#endDateCalendar?.destroy();
+  }
+
+  /**
+   * @param {string[]} values
+   */
+  setValues(values) {
+    const [startDate, endDate] = values;
+
+    this.#startDateCalendar.setDate(startDate, true);
+    this.#endDateCalendar.setDate(endDate);
+  }
+
+  getValues() {
+    return [
+      this.#startDateCalendar.selectedDates[0]?.toJSON(),
+      this.#endDateCalendar.selectedDates[0]?.toJSON()
+    ];
   }
 }
 
