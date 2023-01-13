@@ -20,7 +20,7 @@ export default class NewPointEditorPresenter extends Presenter {
     this.view.pointTypeView.addEventListener('change', this.handlePointTypeViewChange.bind(this));
 
     this.view.destinationView.setOptions(destinationOptions);
-
+    this.view.destinationView.addEventListener('input', this.handleDestinationViewInput.bind(this));
 
     this.view.addEventListener('submit', this.handleViewSubmit.bind(this));
     this.view.addEventListener('reset', this.handleViewReset.bind(this));
@@ -37,6 +37,7 @@ export default class NewPointEditorPresenter extends Presenter {
     this.view.destinationView.setValue(destination.name);
 
     this.updateOffersView(point.offerIds);
+    this.updateDestinationDetailsView(destination);
   }
 
   /**
@@ -54,6 +55,17 @@ export default class NewPointEditorPresenter extends Presenter {
 
     this.view.offersView.hidden = !options.length;
     this.view.offersView.setOptions(options);
+  }
+
+  /**
+   * @param {DestinationAdapter} [destination]
+   */
+  updateDestinationDetailsView(destination) {
+    this.view.destinationDetailsView.hidden = !destination;
+
+    if (destination) {
+      this.view.destinationDetailsView.setContent(destination);
+    }
   }
 
   /**
@@ -100,5 +112,12 @@ export default class NewPointEditorPresenter extends Presenter {
     this.view.destinationView.setLabel(pointTitleMap[pointType]);
 
     this.updateOffersView();
+  }
+
+  handleDestinationViewInput() {
+    const destinationName = this.view.destinationView.getValue();
+    const destination = this.destinationsModel.findBy('name', destinationName);
+
+    this.updateDestinationDetailsView(destination);
   }
 }
