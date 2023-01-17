@@ -7,11 +7,49 @@ import BasePriceView from './common/base-price-view';
 import OffersView from './common/offers-view';
 import DestinationDetailsView from './common/destination-details-view';
 
+/**
+ * @implements {EventListenerObject}
+ */
 export default class NewPointEditorView extends View {
-  constructor() {
+  constructor(listView) {
     super();
 
     this.classList.add('trip-events__item');
+
+    /**
+     * @type {ListView}
+     */
+    this.listView = listView;
+
+    /**
+     * @type {PointTypeView}
+     */
+    this.pointTypeView = this.querySelector(String(PointTypeView));
+
+    /**
+     * @type {DestinationView}
+     */
+    this.destinationView = this.querySelector(String(DestinationView));
+
+    /**
+     * @type {DatesView}
+     */
+    this.datesView = this.querySelector(String(DatesView));
+
+    /**
+     * @type {BasePriceView}
+     */
+    this.basePriceView = this.querySelector(String(BasePriceView));
+
+    /**
+     * @type {OffersView}
+     */
+    this.offersView = this.querySelector(String(OffersView));
+
+    /**
+     * @type {DestinationDetailsView}
+     */
+    this.destinationDetailsView = this.querySelector(String(DestinationDetailsView));
   }
 
   /**
@@ -34,6 +72,33 @@ export default class NewPointEditorView extends View {
         </section>
       </form>
     `;
+  }
+
+  open() {
+    this.listView.prepend(this);
+    this.datesView.createCalendars();
+
+    document.addEventListener('keydown', this);
+  }
+
+  close(notify = true) {
+    this.remove();
+    this.datesView.destroyCalendars();
+
+    document.removeEventListener('keydown', this);
+
+    if (notify) {
+      this.dispatchEvent(new CustomEvent('close'));
+    }
+  }
+
+  /**
+   * @param {KeyboardEvent} event
+   */
+  handleEvent(event) {
+    if (event.key === 'Escape') {
+      this.close();
+    }
   }
 }
 
