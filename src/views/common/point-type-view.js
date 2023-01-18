@@ -110,8 +110,8 @@ export default class PointTypeView extends RadioGroupView {
   }
 
   /**
- * @param {KeyboardEvent} event
- */
+   * @param {KeyboardEvent} event
+   */
   handleKeydown(event) {
     if ((event.key === 'Escape') && (this.querySelector('.event__type-toggle:checked'))) {
       event.stopPropagation();
@@ -124,8 +124,8 @@ export default class PointTypeView extends RadioGroupView {
   }
 
   /**
- * @param {FocusEvent & {relatedTarget: Element}} event
- */
+   * @param {FocusEvent & {relatedTarget: Element}} event
+   */
   handleBlur(event) {
     if (!this.contains(event.relatedTarget)) {
       this.close();
@@ -133,8 +133,8 @@ export default class PointTypeView extends RadioGroupView {
   }
 
   /**
-* @param {PointerEvent & {target: Element}} event
-*/
+   * @param {PointerEvent & {target: Element}} event
+   */
   handlePointerUp(event) {
     if (event.target.closest('.event__type-item')) {
       this.close();
