@@ -79,6 +79,7 @@
 
 /**
  * @typedef PointViewState
+ * @prop {string} id
  * @prop {string} date
  * @prop {string} icon
  * @prop {string} title
@@ -112,6 +113,7 @@
 
 /**
  * @typedef {import('./views/list-view').default} ListView
+ * @typedef {import('./views/point-view').default} PointView
  * @typedef {import('./views/filter-view').default} FilterView
  * @typedef {import('./views/sort-view.js').default} SortView
  * @typedef {import('./views/new-point-editor-view').default} NewPointEditorView
