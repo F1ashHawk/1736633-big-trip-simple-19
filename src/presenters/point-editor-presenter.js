@@ -7,8 +7,6 @@ export default class PointEditorPresenter extends NewPointEditorPresenter {
   constructor() {
     super(...arguments);
 
-    // this.view.addEventListener('reset', this.handleViewReset.bind(this));
-    // this.view.addEventListener('close', this.handleViewClose.bind(this));
   }
 
   /**
@@ -50,8 +48,6 @@ export default class PointEditorPresenter extends NewPointEditorPresenter {
     this.view.awaitDelete(true);
 
     try {
-      // const pointId = this.view.dataset.id;
-
       await this.delete(this.view.dataset.id);
 
       this.view.close();
