@@ -1,3 +1,4 @@
+import {SortType} from '../enums';
 import {sortCallbackMap, sortTitleMap, sortDisabilityMap} from '../maps';
 import {findKey} from '../utils';
 import Presenter from './presenter';
@@ -14,7 +15,14 @@ export default class SortPresenter extends Presenter {
     this.view.setOptions(options);
     this.view.setDisability(Object.values(sortDisabilityMap));
     this.updateViewValue();
+    this.updateViewVisibility();
+
     this.view.addEventListener('change', this.handleViewSort.bind(this));
+
+    this.pointsModel.addEventListener('add', this.handlePointsModelAdd.bind(this));
+    this.pointsModel.addEventListener('update', this.handlePointsModelUpdate.bind(this));
+    this.pointsModel.addEventListener('delete', this.handlePointsModelDelete.bind(this));
+    this.pointsModel.addEventListener('filter', this.handlePointsModelFilter.bind(this));
   }
 
   updateViewValue() {
@@ -24,10 +32,33 @@ export default class SortPresenter extends Presenter {
     this.view.setValue(sortType);
   }
 
+  updateViewVisibility() {
+    this.view.hidden = !this.pointsModel.list().length;
+  }
+
   handleViewSort() {
     const sortType = this.view.getValue();
 
     this.navigate('/');
     this.pointsModel.setSort(sortCallbackMap[sortType]);
+  }
+
+  handlePointsModelAdd() {
+    this.updateViewVisibility();
+  }
+
+  handlePointsModelUpdate() {
+    this.updateViewVisibility();
+  }
+
+  handlePointsModelDelete() {
+    this.updateViewVisibility();
+  }
+
+  handlePointsModelFilter() {
+    this.pointsModel.setSort(sortCallbackMap[SortType.DAY], false);
+
+    this.updateViewValue();
+    this.updateViewVisibility();
   }
 }
