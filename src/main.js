@@ -1,12 +1,8 @@
-import './views/filter-view';
 import FilterView from './views/filter-view';
 import ListView from './views/list-view';
 import SortView from './views/sort-view';
 import NewPointEditorView from './views/new-point-editor-view';
 import PointEditorView from './views/point-editor-view';
-import './views/sort-view';
-import './views/point-view';
-import './views/new-point-editor-view';
 
 import Store from './store';
 
