@@ -1,4 +1,4 @@
-import {FilterType, SortType, PointType} from './enums';
+import {FilterType, SortType, PointType, ButtonState} from './enums';
 
 export const filterTitleMap = {
   [FilterType.EVERYTHING]: 'Everything',
@@ -11,6 +11,11 @@ export const filterTitleMap = {
 export const filterCallbackMap = {
   [FilterType.EVERYTHING]: () => true,
   [FilterType.FUTURE]: (point) => Date.now() <= point.endDateAsNumber
+};
+
+export const emptyListMap = {
+  [FilterType.EVERYTHING]: 'Click NewEvent to create your first point',
+  [FilterType.FUTURE]: 'There are no future events now'
 };
 
 export const sortTitleMap = {
@@ -55,3 +60,13 @@ export const pointTitleMap = {
 export const pointIconMap = Object.fromEntries(
   Object.values(PointType).map((value) => [value, `img/icons/${value}.png`])
 );
+
+export const saveButtonTextMap = {
+  [ButtonState.DEFAULT]: 'Save',
+  [ButtonState.PRESSED]: 'Saving...'
+};
+
+export const deletButtonTextMap = {
+  [ButtonState.DEFAULT]: 'Delete',
+  [ButtonState.PRESSED]: 'Deleting...'
+};

@@ -4,7 +4,8 @@ import {formatNumber} from '../utils';
 import Presenter from './presenter';
 
 /**
- * @extends {Presenter<NewPointEditorView>}
+ * @template {NewPointEditorView} View
+ * @extends {Presenter<View>}
  */
 export default class NewPointEditorPresenter extends Presenter {
   constructor() {
@@ -23,9 +24,11 @@ export default class NewPointEditorPresenter extends Presenter {
     this.view.destinationView.addEventListener('input', this.handleDestinationViewInput.bind(this));
 
     this.view.datesView.setConfig({
-      // Формат даты по ТЗ
-      // Неделя начинается в понедельник
-      // 24 часа вместо AM/PM
+      dateFormat: 'd/m/y H:i',
+      locale: {
+        firstDayOfWeek: 1
+      },
+      'time_24hr': true
     });
 
     this.view.addEventListener('submit', this.handleViewSubmit.bind(this));
@@ -78,6 +81,52 @@ export default class NewPointEditorPresenter extends Presenter {
   }
 
   /**
+   * @param {PointAdapter} point
+   */
+  async save(point) {
+    await this.pointsModel.add(point);
+  }
+
+  /**
+   * @param {SubmitEvent} event
+   */
+  async handleViewSubmit(event) {
+    event.preventDefault();
+
+    this.view.awaitSave(true);
+
+    try {
+      const point = this.pointsModel.item();
+      const destinationName = this.view.destinationView.getValue();
+      const destination = this.destinationsModel.findBy('name', destinationName);
+      const [startDate, endDate] = this.view.datesView.getValues();
+
+      point.type = this.view.pointTypeView.getValue();
+      point.destinationId = destination?.id;
+      point.startDate = startDate;
+      point.endDate = endDate;
+      point.basePrice = this.view.basePriceView.getValue();
+      point.offerIds = this.view.offersView.getValues();
+
+      await this.save(point);
+
+      this.view.close();
+    }
+
+    catch (exception) {
+      this.view.shake();
+
+      if (exception.cause?.error) {
+        const [{fieldName}] = exception.cause.error;
+
+        this.view.findByName(fieldName)?.focus();
+      }
+    }
+
+    this.view.awaitSave(false);
+  }
+
+  /**
    * @override
    */
   handleNavigation() {
@@ -100,14 +149,12 @@ export default class NewPointEditorPresenter extends Presenter {
     }
   }
 
-  /**
-   * @param {SubmitEvent} event
-   */
-  handleViewSubmit(event) {
-    event.preventDefault();
-  }
 
-  handleViewReset() {
+  /**
+   * @param {Event} event
+   */
+  handleViewReset(event) {
+    void event;
     this.view.close();
   }
 

@@ -27,6 +27,8 @@ export default class DatesView extends View {
     super();
 
     this.classList.add('event__field-group', 'event__field-group--time');
+
+    this.addEventListener('keydown', this.handleKeyDown, true);
   }
 
   /**
@@ -35,10 +37,10 @@ export default class DatesView extends View {
   createHtml() {
     return html`
       <label class="visually-hidden" for="event-start-time-1">From</label>
-      <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time">
+      <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="date_from">
       &mdash;
       <label class="visually-hidden" for="event-end-time-1">To</label>
-      <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time">
+      <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="date_to">
     `;
   }
 
@@ -47,9 +49,9 @@ export default class DatesView extends View {
    */
   setConfig(config) {
     const defaultConfig = {
-      allowInput: true,
       enableTime: true,
-      monthSelectorType: 'static'
+      monthSelectorType: 'static',
+      static: true
     };
 
     // @ts-ignore
@@ -93,6 +95,22 @@ export default class DatesView extends View {
       this.#startDateCalendar.selectedDates[0]?.toJSON(),
       this.#endDateCalendar.selectedDates[0]?.toJSON()
     ];
+  }
+
+  closeCalendars() {
+    this.#startDateCalendar?.close();
+    this.#endDateCalendar?.close();
+  }
+
+  /**
+   * @param {KeyboardEvent} event
+   */
+  handleKeyDown(event) {
+    if ((event.key === 'Escape') && ((this.#startDateCalendar.isOpen) || (this.#endDateCalendar.isOpen))) {
+      event.stopImmediatePropagation();
+
+      this.closeCalendars();
+    }
   }
 }
 
